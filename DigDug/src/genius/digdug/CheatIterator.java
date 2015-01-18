@@ -2,10 +2,13 @@ package genius.digdug;
 
 import java.util.List;
 
-/*
-* does not throw CocurrentModificationException on modifying elements while iterating
-@Deceperated use Queue
-*/
+/**
+ * @deprecated
+ * @see genius.queue.Queue
+ * @author dyslabs
+ * iterator, but without CocurrentModificationException
+ * @param <T>
+ */
 public class CheatIterator<T> {
 	private int index = 0;
 	private final List<T> list;

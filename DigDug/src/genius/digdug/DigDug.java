@@ -46,6 +46,9 @@ public class DigDug extends BasicGame {
 		super("DigDug");
 	}
 	
+	/**
+	 * call when game renders
+	 */
 	@Override
 	public synchronized void render(final GameContainer gc, final Graphics g) throws SlickException {
 		final Iterator<Entry<Coordinates, ArrayList<Block>>> itr = Map.getMap().entrySet().iterator();
@@ -76,6 +79,12 @@ public class DigDug extends BasicGame {
 			}
 		}
 	}*/
+	
+	/**
+	 * renders an arraylist of blocks
+	 * @param list an arraylist of blocks
+	 * @param g graphics
+	 */
 	private void renderAll(final ArrayList<Block> list, final Graphics g) {
 		final Comparator<Shader> comparator = (e1, e2) -> {
 			if (e1.zindex > e2.zindex) {
@@ -94,11 +103,20 @@ public class DigDug extends BasicGame {
 		});
 	}
 	
+	/**
+	 * generates the colors used in the map
+	 * @return array of colors
+	 */
 	public static Color[] colorMap() {
 		final int colorLevel = Integer.parseInt(String.valueOf(DigDug.level).split("")[0]);
 		return colorMap2(colorLevel);
 	}
 	
+	/**
+	 * generates the colors used in the map
+	 * @param colorLevel the first number in the current level
+	 * @return array
+	 */
 	public static Color[] colorMap2(final int colorLevel) {
 		if ((colorLevel % 2) != 0) {
 			return new Color[] { Color.cyan, Color.green, Color.yellow, Color.orange, Color.red };
@@ -107,10 +125,18 @@ public class DigDug extends BasicGame {
 		}
 	}
 	
+	/**
+	 * generates the color map, and returns the i index
+	 * @param i the index
+	 * @return color
+	 */
 	public static Color colorMap(final int i) {//return new Color[] {Color.cyan, Color.white, Color.pink, Color.black, Color.magenta};
 		return colorMap()[i];
 	}
 	
+	/**
+	 * the player entity
+	 */
 	public static Entity player = new Entity() {
 		@Override
 		public boolean move(final Facing facing) {
@@ -149,12 +175,19 @@ public class DigDug extends BasicGame {
 		}
 	};
 	
+	/**
+	 * generates the map
+	 */
 	private void generateMap() {
 		for (int y = 0; y < 15; y++) {
 			this.generateRow(y);
 		}
 	}
 	
+	/**
+	 * generates a row at y
+	 * @param y the y-axis
+	 */
 	private void generateRow(final int y) {
 		System.out.println("generating row for level=" + y);
 		for (int x = 0; x < 20; x++) {
@@ -170,6 +203,11 @@ public class DigDug extends BasicGame {
 		}
 	}
 	
+	/**
+	 * create
+	 * @param list arraylist of blocks
+	 * @returns an arraylist of the binds of the blocks
+	 */
 	public static ArrayList<Entity> convertBlocksToEntites(final ArrayList<Block> list) {
 		final ArrayList<Entity> entites = new ArrayList<Entity>();
 		list.stream().forEach(e -> {
@@ -178,6 +216,9 @@ public class DigDug extends BasicGame {
 		return entites;
 	}
 	
+	/**
+	 * init
+	 */
 	@Override
 	public synchronized void init(final GameContainer gc) throws SlickException {
 		playerImgRight = new Image("res/DigDug.png").getScaledCopy(32, 32);
@@ -300,6 +341,10 @@ public class DigDug extends BasicGame {
 		Octopus.filter(BlockRailGun.class, -1);
 	}
 	
+	/**
+	 * checks the arraylist for railguns, and removes them if not in the railguns arraylist
+	 * @param blocks
+	 */
 	private static void checkAll(final ArrayList<Block> blocks) {
 		final Iterator<Block> itr = blocks.iterator();
 		while (itr.hasNext()) {
@@ -313,6 +358,11 @@ public class DigDug extends BasicGame {
 		}
 	}
 	
+	/**
+	 * returns the last index in an arraylist
+	 * @param arraylist the arraylist
+	 * @return the last index
+	 */
 	public static <T> Object lastIndex(final ArrayList<T> arraylist) {
 		if ((arraylist != null) && !arraylist.isEmpty()) {
 			return arraylist.get(arraylist.size() - 1);
@@ -321,12 +371,21 @@ public class DigDug extends BasicGame {
 		}
 	}
 	
+	/**
+	 * binds an entity to a block<br>
+	 * whenever the entity moves, the block updates it position
+	 * @param e entity
+	 * @param b block
+	 */
 	public static void bind(final Entity e, final Block b) {
 		e.binded = b;
 		b.binded = e;
 		b.updateCoords();
 	}
 	
+	/**
+	 * update
+	 */
 	@Override
 	public synchronized void update(final GameContainer gc, final int delta) throws SlickException {
 		try {
@@ -344,18 +403,38 @@ public class DigDug extends BasicGame {
 		}
 	}
 	
+	/**
+	 * adds a shader
+	 * @param id a unique id identifying this shader
+	 * @param shader the shader
+	 */
 	public static synchronized void shader(final String id, final Shader shader) {
 		shaders.put(id, shader);
 	}
 	
+	/**
+	 * removes the identified shader
+	 * @param id uuid
+	 */
 	public static synchronized void shader(final String id) {
 		shaders.remove(id);
 	}
 	
+	/**
+	 * adds a task to be ran at update
+	 * @param t the task
+	 * @param maxPolls the number of times the task will be called before it runs
+	 */
 	public static synchronized void addUpdateTask(final Task t, final int maxPolls) {
 		DigDug.addUpdateTask(t, maxPolls, false);
 	}
 	
+	/**
+	 * @see DigDug#addUpdateTask(Task, int)
+	 * @param t the task
+	 * @param maxPolls
+	 * @param noDelete if the task should not autodelete after running
+	 */ 
 	public static synchronized void addUpdateTask(final Task t, final int maxPolls, final boolean noDelete) {
 		t.maxPolls = maxPolls;
 		t.noDelete = noDelete;
