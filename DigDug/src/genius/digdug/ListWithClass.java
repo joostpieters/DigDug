@@ -16,6 +16,12 @@ public class ListWithClass {
 		return this.yes;
 	}
 	
+	/**
+	 * returns true if the specified list contains an instance of clazz
+	 * @param list a list
+	 * @param clazz a class
+	 * @return boolean
+	 */
 	public static boolean containsClass(final List<?> list, final Class<?> clazz) {
 		return new ListWithClass().listContainsClass(list, clazz);
 	}

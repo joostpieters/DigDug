@@ -15,6 +15,12 @@ public class Octopus {
 	private final HashMap<Coordinates, Integer> costThusFar = new HashMap<Coordinates, Integer>();
 	private static HashMap<Class<?>, Integer> costs = new HashMap<Class<?>, Integer>();
 	
+	/**
+	 * finds a path from start to target
+	 * @param start
+	 * @param target
+	 * @return arraylist
+	 */
 	public ArrayList<Coordinates> construct(final Coordinates start, final Coordinates target) {
 		this.frontier.push(start, 0);
 		this.cameFrom.put(start, null);
@@ -41,6 +47,12 @@ public class Octopus {
 		return null;
 	}
 	
+	/**
+	 * finds a path from start to the nearest instance of destination
+	 * @param start
+	 * @param destination
+	 * @return
+	 */
 	public ArrayList<Coordinates> constructToDest(final Coordinates start, final Class<?> destination) {
 		this.frontier.push(start, 0);
 		this.cameFrom.put(start, null);
@@ -73,6 +85,12 @@ public class Octopus {
 		return null;
 	}
 	
+	/**
+	 * reconstructs the path from start to goal
+	 * @param start
+	 * @param goal
+	 * @return
+	 */
 	private ArrayList<Coordinates> reconstruct(final Coordinates start, final Coordinates goal) {
 		final ArrayList<Coordinates> path = new ArrayList<Coordinates>();
 		Coordinates current = goal;
@@ -86,10 +104,21 @@ public class Octopus {
 		return path;
 	}
 	
+	/**
+	 * calculates the distance between two points
+	 * @param current
+	 * @param next
+	 * @return manhattan distance
+	 */
 	private int distance(final Coordinates current, final Coordinates next) {
 		return (int) (Math.abs(current.x - next.x) + Math.abs(current.y - next.y));
 	}
 	
+	/**
+	 * finds the cost of the block
+	 * @param next
+	 * @return
+	 */
 	private int huestic(final Coordinates next) {
 		int cost = 0;
 		final Iterator<Class<?>> itr = costs.keySet().iterator();
@@ -102,6 +131,11 @@ public class Octopus {
 		return cost;
 	}
 	
+	/**
+	 * adds cost to block
+	 * @param b
+	 * @param cost
+	 */
 	public static void filter(final Class<?> b, final int cost) {
 		System.out.println("Octopus: filtering " + b);
 		costs.put(b, cost);
