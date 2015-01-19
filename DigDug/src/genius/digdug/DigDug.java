@@ -161,26 +161,6 @@ public class DigDug extends BasicGame {
 	 */
 	public static Entity player = new Entity() {
 		@Override
-		public boolean move(final Facing facing) {
-			/*final BlockImage bi = (BlockImage) this.binded;
-			switch (facing) {
-				case up:
-					bi.img = DigDug.playerImgUp;
-					break;
-				case down:
-					bi.img = DigDug.playerImgDown;
-					break;
-				case left:
-					bi.img = DigDug.playerImgLeft;
-					break;
-				case right:
-					bi.img = DigDug.playerImgRight;
-					break;
-			}*/
-			return super.move(facing);
-		}
-		
-		@Override
 		public boolean move(final Coordinates coords) {
 			if (this.canMoveTo(coords)) {
 				if (Map.getBlocks(coords).size() > 0) {
