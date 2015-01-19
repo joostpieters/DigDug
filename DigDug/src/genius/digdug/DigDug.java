@@ -262,8 +262,10 @@ public class DigDug extends BasicGame {
 		player.facingImages = playerImg;
 		
 		fygarLeft = new Image("res/fygar.png");
+		fygarRight = new Image("res/fygarRight.png");
 		
 		pookaLeft = new Image("res/Pooka.png");
+		pookaRight = new Image("res/PookaRight.png");
 		
 		player.move(new Coordinates(9, 7));
 		final BlockImage playerBlock = new BlockImage(playerImgLeft);
@@ -403,13 +405,18 @@ public class DigDug extends BasicGame {
 		}, DigDug.MONSTER_SPEED, true);
 		
 		final HashMap<Facing, Image> pookaImg = new HashMap<Facing, Image>();
-		for (final Facing f : Facing.values()) {
-			pookaImg.put(f, DigDug.pookaLeft);
-		}
+		
+		pookaImg.put(Facing.up, pookaLeft);
+		pookaImg.put(Facing.down, pookaLeft);
+		pookaImg.put(Facing.left, pookaLeft);
+		pookaImg.put(Facing.right, pookaRight);
+		
 		final HashMap<Facing, Image> fygarImg = new HashMap<Facing, Image>();
-		for (final Facing f : Facing.values()) {
-			fygarImg.put(f, DigDug.fygarLeft);
-		}
+		
+		fygarImg.put(Facing.up, fygarLeft);
+		fygarImg.put(Facing.down, fygarLeft);
+		fygarImg.put(Facing.left, fygarLeft);
+		fygarImg.put(Facing.right, fygarRight);
 		
 		this.define(EntityMonster.class, new Coordinates(5, 6), new BlockImage(DigDug.pookaLeft), pookaImg);
 		this.define(EntityMonster.class, new Coordinates(3, 11), new BlockImage(DigDug.fygarLeft), fygarImg);
