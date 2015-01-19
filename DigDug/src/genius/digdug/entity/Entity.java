@@ -6,7 +6,10 @@ import genius.digdug.Facing;
 import genius.digdug.block.Block;
 import genius.digdug.octopus.Octopus;
 
+import java.util.HashMap;
 import java.util.Iterator;
+
+import org.newdawn.slick.Image;
 
 public class Entity {
 	public Coordinates coords = new Coordinates(9, 7);
@@ -21,6 +24,8 @@ public class Entity {
 	public boolean canMove = true;
 	public boolean dead = false;
 	public Coordinates spawn = null;
+	
+	public HashMap<Facing,Image> facingImages=new HashMap<Facing, Image>();
 	
 	public int maxX = 19;
 	public int minX = 0;
@@ -40,6 +45,7 @@ public class Entity {
 		if (DigDug.frozen) {
 			return false;
 		}
+		facing=this.coords.guessFacing(coords);
 		this.coords = coords;
 		if (this.binded != null) {
 			this.binded.updateCoords();

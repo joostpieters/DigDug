@@ -76,6 +76,25 @@ public class Coordinates {
 	}
 	
 	/**
+	 * tries to guess the direction moved
+	 * @param other coordinates
+	 * @return the direction
+	 */
+	public Facing guessFacing(Coordinates other) {
+		if (other.x>x) {
+			return Facing.right;
+		} else if (other.x<x) {
+			return Facing.left;
+		} else if (other.y>y) {
+			return Facing.down;
+		} else if (other.y<y) {
+			return Facing.up;
+		} else {
+			return null;
+		}
+	}
+	
+	/**
 	 * @see Coordinates#ix(float)
 	 */
 	public Coordinates iy(final float a) {

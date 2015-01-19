@@ -24,7 +24,10 @@ public abstract class Block extends Shader {
 		Map.getBlocks(this.coords).remove(this);
 		this.coords = this.binded.coords;
 		Map.add(this.coords, this);
+		this.coordsUpdated();
 	}
+	
+	public void coordsUpdated() {}
 	
 	public void update() {
 	}

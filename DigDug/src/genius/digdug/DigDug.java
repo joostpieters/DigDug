@@ -100,11 +100,7 @@ public class DigDug extends BasicGame {
 	 */
 	private void renderAll(final ArrayList<Shader> list, final Graphics g) {
 		final Comparator<Shader> comparator = (e1, e2) -> {
-			if (e1.zindex > e2.zindex) {
-				return 1;
-			} else {
-				return -1;
-			}
+			return Integer.compare(e1.zindex, e2.zindex);
 		};
 		list.stream().sorted(comparator).forEach((b) -> {
 			if (b instanceof BlockRailGun) {
@@ -228,6 +224,7 @@ public class DigDug extends BasicGame {
 				Entity entity=container.newInstance();
 				entity.spawn=spawn;
 				entity.coords=entity.spawn;
+				entity.facingImages=e.imgs();
 				bind(entity,bind);
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -417,9 +414,18 @@ public class DigDug extends BasicGame {
 				});
 			}}, DigDug.MONSTER_SPEED, true);
 		
-		define(EntityMonster.class,new Coordinates(5,6),new BlockImage(DigDug.pookaLeft));
-		define(EntityMonster.class,new Coordinates(0,11),new BlockImage(DigDug.fygarLeft));
-		define(EntityMonster.class,new Coordinates(17,5),new BlockImage(DigDug.fygarLeft));         
+		HashMap<Facing,Image> pookaImg=new HashMap<Facing, Image>();
+		for (Facing f : Facing.values()) {
+			pookaImg.put(f, DigDug.pookaLeft);
+		}
+		HashMap<Facing,Image> fygarImg=new HashMap<Facing, Image>();
+		for (Facing f : Facing.values()) {
+			fygarImg.put(f, DigDug.fygarLeft);
+		}
+		
+		define(EntityMonster.class,new Coordinates(5,6),new BlockImage(DigDug.pookaLeft),pookaImg);
+		define(EntityMonster.class,new Coordinates(3,11),new BlockImage(DigDug.fygarLeft),fygarImg);
+		define(EntityMonster.class,new Coordinates(17,5),new BlockImage(DigDug.fygarLeft),fygarImg);         
 		
 		Octopus.filter(Block.class, 5000);
 		Octopus.filter(BlockRailGun.class, -1);
@@ -434,8 +440,8 @@ public class DigDug extends BasicGame {
 		DigDug.generateMap();
 	}
 	
-	private void define(Class<EntityMonster> class1,Coordinates spawn,Block b) {
-		EntityInfo info=new EntityInfo(class1,b,spawn);
+	private void define(Class<EntityMonster> class1,Coordinates spawn,Block b,HashMap<Facing,Image> imgs) {
+		EntityInfo info=new EntityInfo(class1,b,spawn,imgs);
 		monsterSpawns.add(info);
 	}
 	
@@ -497,7 +503,7 @@ public class DigDug extends BasicGame {
 		e.binded = b;
 		e.spawn = e.coords;
 		b.binded = e;
-		b.zindex = 10;
+		b.zindex = 700;
 		b.updateCoords();
 	}
 	

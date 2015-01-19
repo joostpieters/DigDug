@@ -14,4 +14,8 @@ public class BlockImage extends BlockScaleable {
 	public void render(final Graphics g, final float x, final float y) {
 		g.drawImage(this.img.getScaledCopy(32 * this.scale, 32 * this.scale), x, y);
 	}
+	
+	public void coordsUpdated() {
+		this.img=binded.facingImages.get(binded.facing);
+	}
 }
