@@ -25,7 +25,7 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
 public class DigDug extends BasicGame {
-	private static volatile HashMap<String, Shader> shaders = new HashMap<String, Shader>();
+	private static volatile HashMap<String, FunctionalShader> shaders = new HashMap<String, FunctionalShader>();
 	private static volatile ArrayList<Task> updateTasks = new ArrayList<Task>();
 	
 	public static ArrayList<BlockRailGun> railguns = new ArrayList<BlockRailGun>();
@@ -63,7 +63,7 @@ public class DigDug extends BasicGame {
 	@Override
 	public synchronized void render(final GameContainer gc, final Graphics g) throws SlickException {
 		final Iterator<Entry<Coordinates, ArrayList<Block>>> itr = Map.getMap().entrySet().iterator();
-		final ArrayList<Shader> shaders = new ArrayList<Shader>();
+		final ArrayList<FunctionalShader> shaders = new ArrayList<FunctionalShader>();
 		while (itr.hasNext()) {
 			shaders.addAll(itr.next().getValue());
 		}
@@ -95,14 +95,20 @@ public class DigDug extends BasicGame {
 	/**
 	 * renders an arraylist of blocks
 	 * 
-	 * @param list an arraylist of blocks
+	 * @param shaders2 an arraylist of blocks
 	 * @param g graphics
 	 */
-	private void renderAll(final ArrayList<Shader> list, final Graphics g) {
-		final Comparator<Shader> comparator = (e1, e2) -> {
-			return Integer.compare(e1.zindex, e2.zindex);
+	private void renderAll(final ArrayList<FunctionalShader> shaders2, final Graphics g) {
+		final Comparator<? super FunctionalShader> comparator = (e1, e2) -> {
+			if ((e1 instanceof Shader) && (e2 instanceof Shader)) {
+				final Shader s1 = (Shader) e1;
+				final Shader s2 = (Shader) e2;
+				return Integer.compare(s1.zindex, s2.zindex);
+			} else {
+				return 0;
+			}
 		};
-		list.stream().sorted(comparator).forEach((b) -> {
+		shaders2.stream().sorted(comparator).forEach((b) -> {
 			if (b instanceof BlockRailGun) {
 				if (!railguns.contains(b)) {
 					return;
@@ -111,7 +117,7 @@ public class DigDug extends BasicGame {
 			if ((b instanceof Block) && !frozen) {
 				b.render(g, ((Block) b).coords.x * 32, ((Block) b).coords.y * 32);
 			} else {
-				b.render(g,-1,-1);
+				b.render(g, -1, -1);
 			}
 		});
 	}
@@ -156,7 +162,7 @@ public class DigDug extends BasicGame {
 	public static Entity player = new Entity() {
 		@Override
 		public boolean move(final Facing facing) {
-			final BlockImage bi = (BlockImage) this.binded;
+			/*final BlockImage bi = (BlockImage) this.binded;
 			switch (facing) {
 				case up:
 					bi.img = DigDug.playerImgUp;
@@ -170,7 +176,7 @@ public class DigDug extends BasicGame {
 				case right:
 					bi.img = DigDug.playerImgRight;
 					break;
-			}
+			}*/
 			return super.move(facing);
 		}
 		
@@ -199,34 +205,26 @@ public class DigDug extends BasicGame {
 			generateRow(y);
 		}
 		monsterSpawns.stream().forEach(e -> {
-			Class<EntityMonster> container=e.entity();
-			Block bind=e.block();
-			Coordinates spawn=e.spawn();
+			final Class<EntityMonster> container = e.entity();
+			final Block bind = e.block();
+			final Coordinates spawn = e.spawn();
 			
-			String[] delete=new String[]{
-					"(5,6)",
-					"(5,7)",
-					"(5,8)",
-					"(0,11)",
-					"(1,11)",
-					"(2,11)",
-					"(3,11)",
-					"(17,5)",
-					"(17,6)",
-					"(17,7)"
-			};
-			for (String c : delete) {
-				Coordinates coords=Coordinates.decode(c);
+			final String[] delete = new String[] { "(5,6)", "(5,7)", "(5,8)", "(0,11)", "(1,11)", "(2,11)", "(3,11)", "(17,5)", "(17,6)", "(17,7)" };
+			for (final String c : delete) {
+				final Coordinates coords = Coordinates.decode(c);
 				Map.delete(coords);
 			}
 			
 			try {
-				Entity entity=container.newInstance();
-				entity.spawn=spawn;
-				entity.coords=entity.spawn;
-				entity.facingImages=e.imgs();
-				bind(entity,bind);
-			} catch (Exception e1) {
+				final Entity entity = container.newInstance();
+				entity.spawn = spawn;
+				entity.coords = entity.spawn;
+				entity.facingImages = e.imgs();
+				entity.facingImages.values().stream().forEach(img -> {
+					//	System.out.println(img);
+				});
+				bind(entity, bind);
+			} catch (final Exception e1) {
 				e1.printStackTrace();
 			}
 		});
@@ -276,9 +274,16 @@ public class DigDug extends BasicGame {
 		playerImgDown = new Image("res/DigDugDown.png");
 		playerImgUp = new Image("res/DigDugUp.png");
 		
-		fygarLeft=new Image("res/fygar.png");
+		final HashMap<Facing, Image> playerImg = new HashMap<Facing, Image>();
+		playerImg.put(Facing.up, DigDug.playerImgUp);
+		playerImg.put(Facing.down, DigDug.playerImgDown);
+		playerImg.put(Facing.left, DigDug.playerImgLeft);
+		playerImg.put(Facing.right, DigDug.playerImgRight);
+		player.facingImages = playerImg;
 		
-		pookaLeft=new Image("res/Pooka.png");
+		fygarLeft = new Image("res/fygar.png");
+		
+		pookaLeft = new Image("res/Pooka.png");
 		
 		player.move(new Coordinates(9, 7));
 		final BlockImage playerBlock = new BlockImage(playerImgLeft);
@@ -316,8 +321,8 @@ public class DigDug extends BasicGame {
 				} else if (sup.right()) {
 					facing = Facing.right;
 				} else if (sup.mouse()) {
-					Coordinates these=new Coordinates(input.getMouseX(),input.getMouseY()).denormalize();
-					System.out.println("mouse: "+these);
+					final Coordinates these = new Coordinates(input.getMouseX(), input.getMouseY()).denormalize();
+					System.out.println("mouse: " + these);
 				}
 				if (facing != null) {
 					player.isActioning = false;
@@ -405,43 +410,44 @@ public class DigDug extends BasicGame {
 				}
 			}
 		}, 0, true);
-		DigDug.addUpdateTask(new Task(){
+		DigDug.addUpdateTask(new Task() {
 			@Override
-			public void run(Object... vars) {
+			public void run(final Object... vars) {
 				monsters.stream().forEach(e -> {
-					if (e==null) return                    ;
+					if (e == null) {
+						return;
+					}
 					e.moveToTarget(player.coords);
 				});
-			}}, DigDug.MONSTER_SPEED, true);
+			}
+		}, DigDug.MONSTER_SPEED, true);
 		
-		HashMap<Facing,Image> pookaImg=new HashMap<Facing, Image>();
-		for (Facing f : Facing.values()) {
+		final HashMap<Facing, Image> pookaImg = new HashMap<Facing, Image>();
+		for (final Facing f : Facing.values()) {
 			pookaImg.put(f, DigDug.pookaLeft);
 		}
-		HashMap<Facing,Image> fygarImg=new HashMap<Facing, Image>();
-		for (Facing f : Facing.values()) {
+		final HashMap<Facing, Image> fygarImg = new HashMap<Facing, Image>();
+		for (final Facing f : Facing.values()) {
 			fygarImg.put(f, DigDug.fygarLeft);
 		}
 		
-		define(EntityMonster.class,new Coordinates(5,6),new BlockImage(DigDug.pookaLeft),pookaImg);
-		define(EntityMonster.class,new Coordinates(3,11),new BlockImage(DigDug.fygarLeft),fygarImg);
-		define(EntityMonster.class,new Coordinates(17,5),new BlockImage(DigDug.fygarLeft),fygarImg);         
+		this.define(EntityMonster.class, new Coordinates(5, 6), new BlockImage(DigDug.pookaLeft), pookaImg);
+		this.define(EntityMonster.class, new Coordinates(3, 11), new BlockImage(DigDug.fygarLeft), fygarImg);
+		this.define(EntityMonster.class, new Coordinates(17, 5), new BlockImage(DigDug.fygarLeft), fygarImg);
 		
 		Octopus.filter(Block.class, 5000);
 		Octopus.filter(BlockRailGun.class, -1);
 		
-		DigDug.shader("level", new Shader(){
-			@Override
-			public void render(Graphics g, float x, float y) {
-				g.setColor(Color.white);
-				g.drawString("Level: "+level, 10+(80*1), 10);
-			}});
+		DigDug.shader("level", (g, x, y) -> {
+			g.setColor(Color.white);
+			g.drawString("Level: " + level, 10 + (80 * 1), 10);
+		});
 		
 		DigDug.generateMap();
 	}
 	
-	private void define(Class<EntityMonster> class1,Coordinates spawn,Block b,HashMap<Facing,Image> imgs) {
-		EntityInfo info=new EntityInfo(class1,b,spawn,imgs);
+	private void define(final Class<EntityMonster> class1, final Coordinates spawn, final Block b, final HashMap<Facing, Image> imgs) {
+		final EntityInfo info = new EntityInfo(class1, b, spawn, imgs);
 		monsterSpawns.add(info);
 	}
 	
@@ -450,12 +456,9 @@ public class DigDug extends BasicGame {
 		level++;
 		Map.clear();
 		DigDug.generateMap();
-		shader("dead", new Shader() {
-			@Override
-			public void render(final Graphics g, final float x, final float y) {
-				g.setColor(Color.white);
-				g.drawString("You won! Press SPACE to continue", 9 * 32, 7 * 32);
-			}
+		shader("dead", (g, x, y) -> {
+			g.setColor(Color.white);
+			g.drawString("You won! Press SPACE to continue", 9 * 32, 7 * 32);
 		});
 	}
 	
@@ -531,10 +534,10 @@ public class DigDug extends BasicGame {
 	 * adds a shader
 	 * 
 	 * @param id a unique id identifying this shader
-	 * @param shader the shader
+	 * @param functionalShader the shader
 	 */
-	public static synchronized void shader(final String id, final Shader shader) {
-		shaders.put(id, shader);
+	public static synchronized void shader(final String id, final FunctionalShader functionalShader) {
+		shaders.put(id, functionalShader);
 	}
 	
 	/**

@@ -25,7 +25,7 @@ public class Entity {
 	public boolean dead = false;
 	public Coordinates spawn = null;
 	
-	public HashMap<Facing,Image> facingImages=new HashMap<Facing, Image>();
+	public HashMap<Facing, Image> facingImages = new HashMap<Facing, Image>();
 	
 	public int maxX = 19;
 	public int minX = 0;
@@ -45,7 +45,7 @@ public class Entity {
 		if (DigDug.frozen) {
 			return false;
 		}
-		facing=this.coords.guessFacing(coords);
+		this.facing = this.coords.guessFacing(coords);
 		this.coords = coords;
 		if (this.binded != null) {
 			this.binded.updateCoords();

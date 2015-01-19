@@ -39,10 +39,11 @@ public class Coordinates {
 	
 	/**
 	 * converts to blocks
+	 * 
 	 * @return the coordinates in block coordinates
 	 */
 	public Coordinates denormalize() {
-		return new Coordinates((int)x/32,(int)y/32);
+		return new Coordinates((int) this.x / 32, (int) this.y / 32);
 	}
 	
 	/**
@@ -77,17 +78,18 @@ public class Coordinates {
 	
 	/**
 	 * tries to guess the direction moved
+	 * 
 	 * @param other coordinates
 	 * @return the direction
 	 */
-	public Facing guessFacing(Coordinates other) {
-		if (other.x>x) {
+	public Facing guessFacing(final Coordinates other) {
+		if (other.x > this.x) {
 			return Facing.right;
-		} else if (other.x<x) {
+		} else if (other.x < this.x) {
 			return Facing.left;
-		} else if (other.y>y) {
+		} else if (other.y > this.y) {
 			return Facing.down;
-		} else if (other.y<y) {
+		} else if (other.y < this.y) {
 			return Facing.up;
 		} else {
 			return null;

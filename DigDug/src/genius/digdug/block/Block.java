@@ -27,7 +27,8 @@ public abstract class Block extends Shader {
 		this.coordsUpdated();
 	}
 	
-	public void coordsUpdated() {}
+	public void coordsUpdated() {
+	}
 	
 	public void update() {
 	}

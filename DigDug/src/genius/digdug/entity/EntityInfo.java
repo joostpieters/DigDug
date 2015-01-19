@@ -1,38 +1,39 @@
 package genius.digdug.entity;
 
-import java.util.HashMap;
-
-import org.newdawn.slick.Image;
-
 import genius.digdug.Coordinates;
 import genius.digdug.Facing;
 import genius.digdug.block.Block;
 
+import java.util.HashMap;
+
+import org.newdawn.slick.Image;
+
 public class EntityInfo {
-	private Class<EntityMonster> clazz;
-	private Block block;
-	private Coordinates spawn;
-	private HashMap<Facing,Image> imgs;
-	public EntityInfo(Class<EntityMonster> class1,Block b,Coordinates spawn,HashMap<Facing,Image> imgs) {
-		this.clazz=class1;
-		this.block=b;
-		this.spawn=spawn;
-		this.imgs=imgs;
+	private final Class<EntityMonster> clazz;
+	private final Block block;
+	private final Coordinates spawn;
+	private final HashMap<Facing, Image> imgs;
+	
+	public EntityInfo(final Class<EntityMonster> class1, final Block b, final Coordinates spawn, final HashMap<Facing, Image> imgs) {
+		this.clazz = class1;
+		this.block = b;
+		this.spawn = spawn;
+		this.imgs = imgs;
 	}
 	
 	public Class<EntityMonster> entity() {
-		return clazz;
+		return this.clazz;
 	}
 	
 	public Block block() {
-		return block;
+		return this.block;
 	}
 	
 	public Coordinates spawn() {
-		return spawn;
+		return this.spawn;
 	}
 	
-	public HashMap<Facing,Image> imgs() {
-		return imgs;
+	public HashMap<Facing, Image> imgs() {
+		return this.imgs;
 	}
 }

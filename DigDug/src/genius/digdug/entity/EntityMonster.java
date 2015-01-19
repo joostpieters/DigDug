@@ -1,9 +1,5 @@
 package genius.digdug.entity;
 
-import java.util.HashMap;
-
-import org.newdawn.slick.Image;
-
 import genius.digdug.Coordinates;
 import genius.digdug.DigDug;
 import genius.digdug.Facing;
@@ -11,15 +7,19 @@ import genius.digdug.Map;
 import genius.digdug.block.BlockRailGun;
 import genius.digdug.block.BlockScaleable;
 
+import java.util.HashMap;
+
+import org.newdawn.slick.Image;
+
 public class EntityMonster extends Entity {
 	public EntityMonster() {
 		DigDug.monsters.add(this);
 		System.out.println("init monster");
 	}
 	
-	public EntityMonster(HashMap<Facing,Image> imgs) {
+	public EntityMonster(final HashMap<Facing, Image> imgs) {
 		this();
-		this.facingImages=imgs;
+		this.facingImages = imgs;
 	}
 	
 	@Override
@@ -39,9 +39,9 @@ public class EntityMonster extends Entity {
 		if (img.scale > 10) {
 			this.die();
 		}
-		Coordinates old=coords;
+		final Coordinates old = this.coords;
 		super.moveToTarget(target);
-		System.out.println("guessed facing from "+old+" to "+coords+" = "+old.guessFacing(coords));
+		System.out.println("guessed facing from " + old + " to " + this.coords + " = " + old.guessFacing(this.coords));
 	}
 	
 	@Override

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.function.Consumer;
 
 public class Octopus {
 	private final PriotoryQueue<Coordinates> frontier = new PriotoryQueue<Coordinates>();
@@ -117,11 +116,11 @@ public class Octopus {
 	 */
 	private int distance(final Coordinates current, final Coordinates next) {
 		int cost = (int) (Math.abs(current.x - next.x) + Math.abs(current.y - next.y));
-		Iterator<Class<?>> itr=costs.keySet().iterator();
+		final Iterator<Class<?>> itr = costs.keySet().iterator();
 		while (itr.hasNext()) {
-			Class<?> clazz=itr.next();
+			final Class<?> clazz = itr.next();
 			if (clazz.isInstance(Map.getBaseBlock(next))) {
-				cost+=costs.get(clazz);
+				cost += costs.get(clazz);
 			}
 		}
 		return cost;
