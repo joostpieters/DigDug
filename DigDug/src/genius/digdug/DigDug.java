@@ -5,6 +5,7 @@ import genius.digdug.block.BlockColor;
 import genius.digdug.block.BlockImage;
 import genius.digdug.block.BlockRailGun;
 import genius.digdug.entity.Entity;
+import genius.digdug.entity.EntityInfo;
 import genius.digdug.entity.EntityMonster;
 import genius.digdug.octopus.Octopus;
 
@@ -28,8 +29,8 @@ public class DigDug extends BasicGame {
 	private static volatile ArrayList<Task> updateTasks = new ArrayList<Task>();
 	
 	public static ArrayList<BlockRailGun> railguns = new ArrayList<BlockRailGun>();
-	public static ArrayList<Entity> monstesrs = new ArrayList<Entity>();
-	public static ArrayList<Entity> monsterSpawns = new ArrayList<Entity>();
+	public static ArrayList<Entity> monsters = new ArrayList<Entity>();
+	public static ArrayList<EntityInfo> monsterSpawns = new ArrayList<EntityInfo>();
 	
 	public static int PLAYER_SPEED = 5;
 	public static int MONSTER_SPEED = 20;
@@ -106,7 +107,7 @@ public class DigDug extends BasicGame {
 			if ((b instanceof Block) && !frozen) {
 				b.render(g, ((Block) b).coords.x * 32, ((Block) b).coords.y * 32);
 			} else {
-				b.render(g);
+				b.render(g,-1,-1);
 			}
 		});
 	}
@@ -194,9 +195,18 @@ public class DigDug extends BasicGame {
 			generateRow(y);
 		}
 		monsterSpawns.stream().forEach(e -> {
-			e.fairize();
-			//	e.canMove=true;
-			DigDug.monstesrs.add(e);
+			Class<EntityMonster> container=e.entity();
+			Block bind=e.block();
+			Coordinates spawn=e.spawn();
+			
+			try {
+				Entity entity=container.newInstance();
+				entity.spawn=spawn;
+				entity.coords=entity.spawn;
+				bind(entity,bind);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
 		});
 	}
 	
@@ -252,7 +262,7 @@ public class DigDug extends BasicGame {
 		DigDug.addUpdateTask(new Task() {
 			@Override
 			public void run(final Object... vars) {
-				if (DigDug.monstesrs.size() == 0) {
+				if (DigDug.monsters.size() == 0) {
 					DigDug.handlePlayerWin();
 				}
 			}
@@ -269,7 +279,7 @@ public class DigDug extends BasicGame {
 					frozen = false;
 					shader("dead");
 					player.fairize();
-					DigDug.monstesrs.stream().forEach(e -> e.fairize());
+					DigDug.monsters.stream().forEach(e -> e.fairize());
 					return;
 				} else if (sup.up()) {
 					facing = Facing.up;
@@ -354,45 +364,38 @@ public class DigDug extends BasicGame {
 				}
 			}
 		}, 0, true);
-		
-		final EntityMonster pooka = new EntityMonster();
-		pooka.coords = new Coordinates(6, 6);
-		pooka.spawn = pooka.coords;
-		
-		DigDug.addUpdateTask(new Task() {
+		DigDug.addUpdateTask(new Task(){
 			@Override
-			public void run(final Object... vars) {
-				final Iterator<Entity> itr = DigDug.monstesrs.iterator();
-				while (itr.hasNext()) {
-					final Entity eater = itr.next();
-					eater.moveToTarget(player.coords);
-				}
-			}
-		}, DigDug.MONSTER_SPEED, true);
+			public void run(Object... vars) {
+				monsters.stream().forEach(e -> {
+					e.moveToTarget(player.coords);
+				});
+			}}, DigDug.MONSTER_SPEED, true);
 		
-		Octopus.filter(BlockColor.class, 90);
+		define(EntityMonster.class,new Coordinates(6,6),new BlockColor(DigDug.POOKA_COLOR));
+		
+		Octopus.filter(Block.class, 5000);
 		Octopus.filter(BlockRailGun.class, -1);
+		
+		DigDug.shader("level", new Shader(){
+			@Override
+			public void render(Graphics g, float x, float y) {
+				g.setColor(Color.white);
+				g.drawString("Level: "+level, 10+(80*1), 10);
+			}});
 		
 		DigDug.generateMap();
 	}
 	
-	/**
-	 * defines an entity to spawn at map generation
-	 * 
-	 * @param e
-	 * @param spawn
-	 * @param binded
-	 */
-	private static void define(final Entity e, final Coordinates spawn, final Block binded) {
-		e.coords = spawn;
-		e.spawn = spawn;
-		bind(e, binded);
-		monsterSpawns.add(e);
+	private void define(Class<EntityMonster> class1,Coordinates spawn,Block b) {
+		EntityInfo info=new EntityInfo(class1,b,spawn);
+		monsterSpawns.add(info);
 	}
 	
 	protected static void handlePlayerWin() {
 		frozen = true;
 		level++;
+		Map.clear();
 		DigDug.generateMap();
 		shader("dead", new Shader() {
 			@Override
@@ -447,6 +450,7 @@ public class DigDug extends BasicGame {
 		e.binded = b;
 		e.spawn = e.coords;
 		b.binded = e;
+		b.zindex = 10;
 		b.updateCoords();
 	}
 	

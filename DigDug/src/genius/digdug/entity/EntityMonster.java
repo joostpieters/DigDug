@@ -8,7 +8,8 @@ import genius.digdug.block.BlockScaleable;
 
 public class EntityMonster extends Entity {
 	public EntityMonster() {
-		DigDug.monstesrs.add(this);
+		DigDug.monsters.add(this);
+		System.out.println("init monster");
 	}
 	
 	@Override
@@ -34,7 +35,7 @@ public class EntityMonster extends Entity {
 	@Override
 	public void die() {
 		System.out.println("dead");
-		DigDug.monstesrs.remove(this);
+		DigDug.monsters.remove(this);
 		Map.getBlocks(this.coords).remove(this.binded);
 		this.canMove = false;
 		this.dead = true;

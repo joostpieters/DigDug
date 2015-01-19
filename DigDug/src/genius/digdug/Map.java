@@ -99,7 +99,14 @@ public class Map {
 	}
 	
 	/**
-	 * @return the hashmap used internally
+	 * clears the entire map
+	 */
+	public static void clear() {
+		map.clear();
+	}
+	
+	/**
+	 * @return the a clone of the hashmap used internally
 	 */
 	@SuppressWarnings("unchecked")
 	public static HashMap<Coordinates, ArrayList<Block>> getMap() {
