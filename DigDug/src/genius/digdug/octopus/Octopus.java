@@ -17,6 +17,7 @@ public class Octopus {
 	
 	/**
 	 * finds a path from start to target
+	 * 
 	 * @param start
 	 * @param target
 	 * @return arraylist
@@ -49,6 +50,7 @@ public class Octopus {
 	
 	/**
 	 * finds a path from start to the nearest instance of destination
+	 * 
 	 * @param start
 	 * @param destination
 	 * @return
@@ -87,6 +89,7 @@ public class Octopus {
 	
 	/**
 	 * reconstructs the path from start to goal
+	 * 
 	 * @param start
 	 * @param goal
 	 * @return
@@ -106,6 +109,7 @@ public class Octopus {
 	
 	/**
 	 * calculates the distance between two points
+	 * 
 	 * @param current
 	 * @param next
 	 * @return manhattan distance
@@ -116,6 +120,7 @@ public class Octopus {
 	
 	/**
 	 * finds the cost of the block
+	 * 
 	 * @param next
 	 * @return
 	 */
@@ -133,6 +138,7 @@ public class Octopus {
 	
 	/**
 	 * adds cost to block
+	 * 
 	 * @param b
 	 * @param cost
 	 */

@@ -18,6 +18,7 @@ public class ListWithClass {
 	
 	/**
 	 * returns true if the specified list contains an instance of clazz
+	 * 
 	 * @param list a list
 	 * @param clazz a class
 	 * @return boolean

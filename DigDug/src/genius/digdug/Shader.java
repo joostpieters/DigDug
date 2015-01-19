@@ -10,6 +10,7 @@ public abstract class Shader {
 	
 	/**
 	 * renders this shader
+	 * 
 	 * @param g graphics
 	 */
 	public void render(final Graphics g) {
@@ -18,6 +19,7 @@ public abstract class Shader {
 	
 	/**
 	 * renders at coordinates
+	 * 
 	 * @param g graphics
 	 * @param x
 	 * @param y

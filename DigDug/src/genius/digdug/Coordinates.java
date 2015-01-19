@@ -2,6 +2,7 @@ package genius.digdug;
 
 /**
  * identifies a point
+ * 
  * @author dyslabs
  *
  */
@@ -28,7 +29,8 @@ public class Coordinates {
 	}
 	
 	/**
-	 * converts to pixels 
+	 * converts to pixels
+	 * 
 	 * @return the corrdinates in pixel coordinates
 	 */
 	public Coordinates normalize() {
@@ -37,6 +39,7 @@ public class Coordinates {
 	
 	/**
 	 * changes the x value
+	 * 
 	 * @param nx the new x value
 	 * @return coordinates with x value changed
 	 */
@@ -46,6 +49,7 @@ public class Coordinates {
 	
 	/**
 	 * changes the y value
+	 * 
 	 * @param ny the new y value
 	 * @return updated coordinates
 	 */
@@ -55,6 +59,7 @@ public class Coordinates {
 	
 	/**
 	 * adds A to the x value
+	 * 
 	 * @param a how much to add
 	 * @return updated coordinates
 	 */
@@ -71,6 +76,7 @@ public class Coordinates {
 	
 	/**
 	 * gets gets the coordinates in the specified direction
+	 * 
 	 * @param facing the direction
 	 * @return updated coordinates
 	 */
@@ -104,6 +110,7 @@ public class Coordinates {
 	
 	/**
 	 * converts a string in format of (x,y) to a coordinate object
+	 * 
 	 * @param s the string to decode
 	 * @return coordinates
 	 */
@@ -118,7 +125,7 @@ public class Coordinates {
 	/**
 	 * @see Coordinates#toCoordinates(String)
 	 */
-	public static Coordinates decode(String nm) {
+	public static Coordinates decode(final String nm) {
 		return Coordinates.toCoordinates(nm);
 	}
 	
@@ -129,6 +136,7 @@ public class Coordinates {
 	
 	/**
 	 * gets all the neighbors of these coordinates
+	 * 
 	 * @see Coordinates#facing(Facing)
 	 * @return
 	 */
@@ -143,6 +151,7 @@ public class Coordinates {
 	
 	/**
 	 * returns true if these coordinates are out of bounds
+	 * 
 	 * @return boolean
 	 */
 	public boolean outOfBounds() {

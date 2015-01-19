@@ -29,7 +29,7 @@ public class DigDug extends BasicGame {
 	
 	public static ArrayList<BlockRailGun> railguns = new ArrayList<BlockRailGun>();
 	public static ArrayList<Entity> monstesrs = new ArrayList<Entity>();
-	public static ArrayList<Entity> monsterSpawns=new ArrayList<Entity>();
+	public static ArrayList<Entity> monsterSpawns = new ArrayList<Entity>();
 	
 	public static int PLAYER_SPEED = 5;
 	public static int MONSTER_SPEED = 20;
@@ -42,7 +42,7 @@ public class DigDug extends BasicGame {
 	public static Color POOKA_COLOR = Color.blue;
 	public static Color FYGAR_COLOR = Color.lightGray;
 	private static int level = 1;
-	public static boolean frozen=false;
+	public static boolean frozen = false;
 	
 	public DigDug() {
 		super("DigDug");
@@ -54,12 +54,12 @@ public class DigDug extends BasicGame {
 	@Override
 	public synchronized void render(final GameContainer gc, final Graphics g) throws SlickException {
 		final Iterator<Entry<Coordinates, ArrayList<Block>>> itr = Map.getMap().entrySet().iterator();
-		ArrayList<Shader> shaders=new ArrayList<Shader>();
+		final ArrayList<Shader> shaders = new ArrayList<Shader>();
 		while (itr.hasNext()) {
 			shaders.addAll(itr.next().getValue());
 		}
 		shaders.addAll(DigDug.shaders.values());
-		renderAll(shaders, g);
+		this.renderAll(shaders, g);
 	}
 	
 	/*private void renderAll(ArrayList<Block> blocks,Graphics g) {
@@ -85,6 +85,7 @@ public class DigDug extends BasicGame {
 	
 	/**
 	 * renders an arraylist of blocks
+	 * 
 	 * @param list an arraylist of blocks
 	 * @param g graphics
 	 */
@@ -102,8 +103,8 @@ public class DigDug extends BasicGame {
 					return;
 				}
 			}
-			if (b instanceof Block && !frozen) {
-				b.render(g, ((Block)b).coords.x*32, ((Block)b).coords.y*32);
+			if ((b instanceof Block) && !frozen) {
+				b.render(g, ((Block) b).coords.x * 32, ((Block) b).coords.y * 32);
 			} else {
 				b.render(g);
 			}
@@ -112,6 +113,7 @@ public class DigDug extends BasicGame {
 	
 	/**
 	 * generates the colors used in the map
+	 * 
 	 * @return array of colors
 	 */
 	public static Color[] colorMap() {
@@ -121,6 +123,7 @@ public class DigDug extends BasicGame {
 	
 	/**
 	 * generates the colors used in the map
+	 * 
 	 * @param colorLevel the first number in the current level
 	 * @return array
 	 */
@@ -134,6 +137,7 @@ public class DigDug extends BasicGame {
 	
 	/**
 	 * generates the color map, and returns the i index
+	 * 
 	 * @param i the index
 	 * @return color
 	 */
@@ -191,13 +195,14 @@ public class DigDug extends BasicGame {
 		}
 		monsterSpawns.stream().forEach(e -> {
 			e.fairize();
-		//	e.canMove=true;
+			//	e.canMove=true;
 			DigDug.monstesrs.add(e);
 		});
 	}
 	
 	/**
 	 * generates a row at y
+	 * 
 	 * @param y the y-axis
 	 */
 	private static void generateRow(final int y) {
@@ -216,7 +221,8 @@ public class DigDug extends BasicGame {
 	}
 	
 	/**
-	 * create
+	 * creates an arraylist of the binded entities in the block arraylist
+	 * 
 	 * @param list arraylist of blocks
 	 * @returns an arraylist of the binds of the blocks
 	 */
@@ -237,34 +243,35 @@ public class DigDug extends BasicGame {
 		playerImgLeft = playerImgRight.getFlippedCopy(true, false);
 		playerImgDown = new Image("res/DigDugDown.png");
 		playerImgUp = new Image("res/DigDugUp.png");
-
+		
 		player.move(new Coordinates(9, 7));
 		final BlockImage playerBlock = new BlockImage(playerImgLeft);
 		player.facing = Facing.left;
 		Map.add(new Coordinates(9, 7), playerBlock);
 		bind(player, playerBlock);
-		DigDug.addUpdateTask(new Task(){
+		DigDug.addUpdateTask(new Task() {
 			@Override
-			public void run(Object... vars) {
-				if (DigDug.monstesrs.size()==0) {
+			public void run(final Object... vars) {
+				if (DigDug.monstesrs.size() == 0) {
 					DigDug.handlePlayerWin();
 				}
-			}}, 0, true);
+			}
+		}, 0, true);
 		DigDug.addUpdateTask(new Task() {
 			@Override
 			public void run(final Object... vars) {
 				final Input input = (Input) vars[0];
 				final SuperInput sup = new SuperInput(input);
 				Facing facing = null;
-				if (sup.action()&&!frozen) {
+				if (sup.action() && !frozen) {
 					return;
-				} else if (sup.action()&&frozen) {
-					frozen=false;
+				} else if (sup.action() && frozen) {
+					frozen = false;
 					shader("dead");
 					player.fairize();
 					DigDug.monstesrs.stream().forEach(e -> e.fairize());
 					return;
-			    } else if (sup.up()) {
+				} else if (sup.up()) {
 					facing = Facing.up;
 				} else if (sup.down()) {
 					facing = Facing.down;
@@ -348,10 +355,9 @@ public class DigDug extends BasicGame {
 			}
 		}, 0, true);
 		
-		EntityMonster pooka=new EntityMonster();
-		pooka.coords=new Coordinates(6,6);
-		pooka.spawn=pooka.coords;
-		
+		final EntityMonster pooka = new EntityMonster();
+		pooka.coords = new Coordinates(6, 6);
+		pooka.spawn = pooka.coords;
 		
 		DigDug.addUpdateTask(new Task() {
 			@Override
@@ -372,31 +378,35 @@ public class DigDug extends BasicGame {
 	
 	/**
 	 * defines an entity to spawn at map generation
+	 * 
 	 * @param e
 	 * @param spawn
 	 * @param binded
 	 */
-	private static void define(Entity e,Coordinates spawn, Block binded) {
-		e.coords=spawn;
-		e.spawn=spawn;
-		bind(e,binded);
+	private static void define(final Entity e, final Coordinates spawn, final Block binded) {
+		e.coords = spawn;
+		e.spawn = spawn;
+		bind(e, binded);
 		monsterSpawns.add(e);
 	}
 	
 	protected static void handlePlayerWin() {
-		frozen=true;
+		frozen = true;
 		level++;
 		DigDug.generateMap();
-		shader("dead",new Shader(){
+		shader("dead", new Shader() {
 			@Override
-			public void render(Graphics g, float x, float y) {
+			public void render(final Graphics g, final float x, final float y) {
 				g.setColor(Color.white);
-				g.drawString("You won! Press SPACE to continue", 9*32, 7*32);
-			}});
+				g.drawString("You won! Press SPACE to continue", 9 * 32, 7 * 32);
+			}
+		});
 	}
-
+	
 	/**
-	 * checks the arraylist for railguns, and removes them if not in the railguns arraylist
+	 * checks the arraylist for railguns, and removes them if not in the
+	 * railguns arraylist
+	 * 
 	 * @param blocks
 	 */
 	private static void checkAll(final ArrayList<Block> blocks) {
@@ -414,6 +424,7 @@ public class DigDug extends BasicGame {
 	
 	/**
 	 * returns the last index in an arraylist
+	 * 
 	 * @param arraylist the arraylist
 	 * @return the last index
 	 */
@@ -428,6 +439,7 @@ public class DigDug extends BasicGame {
 	/**
 	 * binds an entity to a block<br>
 	 * whenever the entity moves, the block updates it position
+	 * 
 	 * @param e entity
 	 * @param b block
 	 */
@@ -460,6 +472,7 @@ public class DigDug extends BasicGame {
 	
 	/**
 	 * adds a shader
+	 * 
 	 * @param id a unique id identifying this shader
 	 * @param shader the shader
 	 */
@@ -469,6 +482,7 @@ public class DigDug extends BasicGame {
 	
 	/**
 	 * removes the identified shader
+	 * 
 	 * @param id uuid
 	 */
 	public static synchronized void shader(final String id) {
@@ -477,8 +491,10 @@ public class DigDug extends BasicGame {
 	
 	/**
 	 * adds a task to be ran at update
+	 * 
 	 * @param t the task
-	 * @param maxPolls the number of times the task will be called before it runs
+	 * @param maxPolls the number of times the task will be called before it
+	 *            runs
 	 */
 	public static synchronized void addUpdateTask(final Task t, final int maxPolls) {
 		DigDug.addUpdateTask(t, maxPolls, false);
@@ -489,7 +505,7 @@ public class DigDug extends BasicGame {
 	 * @param t the task
 	 * @param maxPolls
 	 * @param noDelete if the task should not autodelete after running
-	 */ 
+	 */
 	public static synchronized void addUpdateTask(final Task t, final int maxPolls, final boolean noDelete) {
 		t.maxPolls = maxPolls;
 		t.noDelete = noDelete;
@@ -497,12 +513,13 @@ public class DigDug extends BasicGame {
 	}
 	
 	public static void handlePlayerDeath() {
-		frozen=true;
-		shader("dead",new Shader(){
+		frozen = true;
+		shader("dead", new Shader() {
 			@Override
-			public void render(Graphics g, float x, float y) {
+			public void render(final Graphics g, final float x, final float y) {
 				g.setColor(Color.white);
-				g.drawString("You died. Press SPACE to continue", 9*32, 7*32);
-			}});
+				g.drawString("You died. Press SPACE to continue", 9 * 32, 7 * 32);
+			}
+		});
 	}
 }

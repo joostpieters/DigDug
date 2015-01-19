@@ -20,7 +20,7 @@ public class Entity {
 	private int polls = 0;
 	public boolean canMove = true;
 	public boolean dead = false;
-	public Coordinates spawn=null;
+	public Coordinates spawn = null;
 	
 	public int maxX = 19;
 	public int minX = 0;
@@ -37,7 +37,9 @@ public class Entity {
 		if (!this.canMove) {
 			return false;
 		}
-		if (DigDug.frozen) return false;
+		if (DigDug.frozen) {
+			return false;
+		}
 		this.coords = coords;
 		if (this.binded != null) {
 			this.binded.updateCoords();
@@ -81,6 +83,6 @@ public class Entity {
 	}
 	
 	public void fairize() {
-		move(spawn);
+		this.move(this.spawn);
 	}
 }

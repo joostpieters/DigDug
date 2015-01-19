@@ -2,6 +2,7 @@ package genius.digdug;
 
 /**
  * a direction
+ * 
  * @author dyslabs
  *
  */

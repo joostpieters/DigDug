@@ -11,6 +11,7 @@ public class Map {
 	
 	/**
 	 * clears all blocks at the coordinates
+	 * 
 	 * @param coords coordinates
 	 */
 	public static void removeAll(final Coordinates coords) {
@@ -19,6 +20,7 @@ public class Map {
 	
 	/**
 	 * adds the block to the coordinates
+	 * 
 	 * @param coords the coordinates
 	 * @param b the block
 	 */
@@ -33,7 +35,7 @@ public class Map {
 	
 	/**
 	 * @see Map#add(Coordinates, Block)
-	 * adds if empty
+	 *      adds if empty
 	 * @param coords the coordinates
 	 * @param b the block
 	 */
@@ -45,6 +47,7 @@ public class Map {
 	
 	/**
 	 * gets the first block at the coordinates
+	 * 
 	 * @param coords the coordinates
 	 * @return index 0 block
 	 */
@@ -58,6 +61,7 @@ public class Map {
 	
 	/**
 	 * triggers events, used internally by {@link Map#add(Coordinates, Block)}
+	 * 
 	 * @param coords
 	 * @param b
 	 */
@@ -75,6 +79,7 @@ public class Map {
 	
 	/**
 	 * gets the blocks
+	 * 
 	 * @param coords
 	 * @return
 	 */
