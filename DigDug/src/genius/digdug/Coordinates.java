@@ -38,6 +38,14 @@ public class Coordinates {
 	}
 	
 	/**
+	 * converts to blocks
+	 * @return the coordinates in block coordinates
+	 */
+	public Coordinates denormalize() {
+		return new Coordinates((int)x/32,(int)y/32);
+	}
+	
+	/**
 	 * changes the x value
 	 * 
 	 * @param nx the new x value

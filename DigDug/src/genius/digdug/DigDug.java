@@ -40,8 +40,16 @@ public class DigDug extends BasicGame {
 	public static Image playerImgDown;
 	public static Image playerImgUp;
 	
-	public static Color POOKA_COLOR = Color.blue;
-	public static Color FYGAR_COLOR = Color.lightGray;
+	public static Image pookaUp;
+	public static Image pookaDown;
+	public static Image pookaLeft;
+	public static Image pookaRight;
+	
+	public static Image fygarUp;
+	public static Image fygarDown;
+	public static Image fygarLeft;
+	public static Image fygarRight;
+	
 	private static int level = 1;
 	public static boolean frozen = false;
 	
@@ -199,6 +207,23 @@ public class DigDug extends BasicGame {
 			Block bind=e.block();
 			Coordinates spawn=e.spawn();
 			
+			String[] delete=new String[]{
+					"(5,6)",
+					"(5,7)",
+					"(5,8)",
+					"(0,11)",
+					"(1,11)",
+					"(2,11)",
+					"(3,11)",
+					"(17,5)",
+					"(17,6)",
+					"(17,7)"
+			};
+			for (String c : delete) {
+				Coordinates coords=Coordinates.decode(c);
+				Map.delete(coords);
+			}
+			
 			try {
 				Entity entity=container.newInstance();
 				entity.spawn=spawn;
@@ -254,6 +279,10 @@ public class DigDug extends BasicGame {
 		playerImgDown = new Image("res/DigDugDown.png");
 		playerImgUp = new Image("res/DigDugUp.png");
 		
+		fygarLeft=new Image("res/fygar.png");
+		
+		pookaLeft=new Image("res/Pooka.png");
+		
 		player.move(new Coordinates(9, 7));
 		final BlockImage playerBlock = new BlockImage(playerImgLeft);
 		player.facing = Facing.left;
@@ -289,6 +318,9 @@ public class DigDug extends BasicGame {
 					facing = Facing.left;
 				} else if (sup.right()) {
 					facing = Facing.right;
+				} else if (sup.mouse()) {
+					Coordinates these=new Coordinates(input.getMouseX(),input.getMouseY()).denormalize();
+					System.out.println("mouse: "+these);
 				}
 				if (facing != null) {
 					player.isActioning = false;
@@ -296,6 +328,18 @@ public class DigDug extends BasicGame {
 				}
 			}
 		}, PLAYER_SPEED, true);
+		/**
+		 * (5,6)
+		 * (5,7)
+		 * (5,8)
+		 * (0,11)
+		 * (1,11)
+		 * (2,11)
+		 * (3,11)
+		 * (17,5)
+		 * (17,6)
+		 * (17,7)
+		 */
 		
 		DigDug.addUpdateTask(new Task() {
 			@Override
@@ -368,11 +412,14 @@ public class DigDug extends BasicGame {
 			@Override
 			public void run(Object... vars) {
 				monsters.stream().forEach(e -> {
+					if (e==null) return                    ;
 					e.moveToTarget(player.coords);
 				});
 			}}, DigDug.MONSTER_SPEED, true);
 		
-		define(EntityMonster.class,new Coordinates(6,6),new BlockColor(DigDug.POOKA_COLOR));
+		define(EntityMonster.class,new Coordinates(5,6),new BlockImage(DigDug.pookaLeft));
+		define(EntityMonster.class,new Coordinates(0,11),new BlockImage(DigDug.fygarLeft));
+		define(EntityMonster.class,new Coordinates(17,5),new BlockImage(DigDug.fygarLeft));         
 		
 		Octopus.filter(Block.class, 5000);
 		Octopus.filter(BlockRailGun.class, -1);

@@ -43,4 +43,32 @@ public class SuperInput {
 	public boolean action() {
 		return this.input.isKeyDown(Input.KEY_SPACE) || this.input.isKeyDown(Input.KEY_RCONTROL);
 	}
+	
+	/**
+	 * @return left mouse button
+	 */
+	public boolean bleft() {
+		return input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON);
+	}
+	
+	/**
+	 * @return right mouse button
+	 */
+	public boolean bright() {
+		return input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON);
+	}
+	
+	/**
+	 * @return middle mouse button
+	 */
+	public boolean bmiddle() {
+		return input.isMouseButtonDown(Input.MOUSE_MIDDLE_BUTTON);
+	}
+	
+	/**
+	 * @return any mouse button
+	 */
+	public boolean mouse() {
+		return bleft()||bright()||bmiddle();
+	}
 }

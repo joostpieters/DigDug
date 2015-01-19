@@ -11,7 +11,7 @@ import java.util.Iterator;
 public class Entity {
 	public Coordinates coords = new Coordinates(9, 7);
 	public Block binded;
-	public Facing facing = Facing.down;
+	public Facing facing = Facing.right;
 	public boolean isActioning = false;
 	public Octopus octopus = new Octopus();
 	int octoTries = 0;
