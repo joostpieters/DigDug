@@ -1,6 +1,7 @@
 package genius.digdug.entity;
 
 import genius.digdug.Coordinates;
+import genius.digdug.DigDug;
 import genius.digdug.Facing;
 import genius.digdug.block.Block;
 import genius.digdug.octopus.Octopus;
@@ -19,6 +20,7 @@ public class Entity {
 	private int polls = 0;
 	public boolean canMove = true;
 	public boolean dead = false;
+	public Coordinates spawn=null;
 	
 	public int maxX = 19;
 	public int minX = 0;
@@ -35,6 +37,7 @@ public class Entity {
 		if (!this.canMove) {
 			return false;
 		}
+		if (DigDug.frozen) return false;
 		this.coords = coords;
 		if (this.binded != null) {
 			this.binded.updateCoords();
@@ -55,6 +58,7 @@ public class Entity {
 					this.move(octopus.construct(this.coords, target).get(0));
 				} catch (final IndexOutOfBoundsException ioobe) {
 					System.err.println("warning: nowhere to go");
+					DigDug.handlePlayerDeath();
 				}
 			} else {
 				this.polls--;
@@ -74,5 +78,9 @@ public class Entity {
 	}
 	
 	public void die() {
+	}
+	
+	public void fairize() {
+		move(spawn);
 	}
 }
